@@ -238,7 +238,6 @@
 				A14115A31D5B18F3007A1A55 /* Frameworks */,
 				A14115A41D5B18F3007A1A55 /* Resources */,
 				1E3C98B95F4D4CDE5402DD21 /* [CP] Embed Pods Frameworks */,
-				3977E74ABFED444A761B21B8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -262,7 +261,7 @@
 				TargetAttributes = {
 					A14115A51D5B18F3007A1A55 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = A4ZM73UFF5;
+						DevelopmentTeam = GTDT5HJFUM;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
@@ -326,28 +325,18 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-C64Emulator/Pods-C64Emulator-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
+				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-C64Emulator/Pods-C64Emulator-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3977E74ABFED444A761B21B8 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-C64Emulator/Pods-C64Emulator-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C2DCA9CF106145161310F2D0 /* [CP] Check Pods Manifest.lock */ = {
@@ -356,13 +345,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-C64Emulator-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -539,13 +531,17 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = A4ZM73UFF5;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GTDT5HJFUM;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = C64Emulator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.andyqua.C64Emulator;
+				PRODUCT_BUNDLE_IDENTIFIER = com.valeriolupi.C64Emulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "C64Emulator/C64Emulator-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -562,12 +558,16 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = A4ZM73UFF5;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GTDT5HJFUM;
 				INFOPLIST_FILE = C64Emulator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.andyqua.C64Emulator;
+				PRODUCT_BUNDLE_IDENTIFIER = com.valeriolupi.C64Emulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "C64Emulator/C64Emulator-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				USER_HEADER_SEARCH_PATHS = "C64Emulator/libx64/vice/src C64Emulator/libx64/vice/src/c64 C64Emulator/libx64/vice/src/sid C64Emulator/libx64/vice/src/vicii C64Emulator/libx64/vice/src/arch/unix/ios/cocoa_touch C64Emulator/libx64/vice/src/arch/unix/ios C64Emulator/libx64/vice/src/arch/unix C64Emulator/libx64/vice/src/c64/cart C64Emulator/libx64/vice/src/drive C64Emulator/libx64/vice/src/c64exp C64Emulator/libx64/vice/src/video C64Emulator/libx64/vice/src/userport C64Emulator/libx64/vice/src/tape C64Emulator/libx64/vice/src/raster C64Emulator/libx64/vice/src/viciisc";

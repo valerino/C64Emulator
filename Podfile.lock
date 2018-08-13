@@ -12,10 +12,15 @@ DEPENDENCIES:
   - FMDB
   - GCDWebServer/WebUploader (~> 3.0)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - FMDB
+    - GCDWebServer
+
 SPEC CHECKSUMS:
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
   GCDWebServer: 2a375ec42839a41d7187d04e5b688d32fa5c4cd5
 
 PODFILE CHECKSUM: 393262c3d6c7ef579d401b32350cc482b2811fd6
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.5.3

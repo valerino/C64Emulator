@@ -9,7 +9,14 @@
 import UIKit
 import GCDWebServer
 
-class DiskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+extension DiskViewController: UISearchResultsUpdating {
+    // MARK: - UISearchResultsUpdating Delegate
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
+    }
+}
+
+class DiskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     @IBOutlet var tableView : UITableView!
     @IBOutlet var viewTypeSeg : UISegmentedControl!
@@ -18,19 +25,32 @@ class DiskViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     var gamesFolder : String!
     var disks = [String]()
-    var games = [String:[Game]]()
+    var filteredDisks = [String]()
+    var games = [Game]()
+    var filteredGames = [Game]()
+    let searchController = UISearchController(searchResultsController: nil)
     var selectedDiskName : String = ""
     var selectedProgram : String = ""
+    
     let sections = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters.map { String($0) }
+
+    func isFiltering() -> Bool {
+        return searchController.isActive && !searchBarIsEmpty()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Disks"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        
         gamesFolder = ""
         if let folder = Bundle.main.path(forResource: "games", ofType: "") {
             gamesFolder = folder
         }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +61,19 @@ class DiskViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func searchBarIsEmpty() -> Bool {
+        // Returns true if the text is empty or nil
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+        filteredDisks = disks.filter({( disk : String) -> Bool in
+            return disk.lowercased().contains(searchText.lowercased())
+        })
+        
+        tableView.reloadData()
     }
     
     func showDisk( diskPath: String ) {
@@ -100,7 +133,7 @@ class DiskViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         disks = DatabaseManager.sharedInstance.getListOfDisks()
         let list = DatabaseManager.sharedInstance.getListOfGames()
-        
+        /*
         // Split games into sections (A-Z)
         for game in list {
             
@@ -111,10 +144,14 @@ class DiskViewController: UIViewController, UITableViewDelegate, UITableViewData
                 games[c] = [game]
             }
         }
+        */
+        for game in list {
+            games.append(game)
+        }
     }
     
     //MARK: UITableViewDataSource
-    
+    /*
     func numberOfSections(in tableView: UITableView) -> Int {
         if viewTypeSeg.selectedSegmentIndex == 0 {
             if games.count > 0 {
@@ -158,19 +195,26 @@ class DiskViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         }
     }
-    
+    */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if viewTypeSeg.selectedSegmentIndex == 0 {
+            return games.count
+            /*
             let key = sections[section]
             if let arr = games[key] {
                 return arr.count
             }
             return 0
+            */
         } else {
+            if isFiltering() {
+                return filteredDisks.count
+            }
             return disks.count
         }
     }
     
+    /*
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         
         if viewTypeSeg.selectedSegmentIndex == 0 {
@@ -179,21 +223,26 @@ class DiskViewController: UIViewController, UITableViewDelegate, UITableViewData
             return []
         }
     }
+    */
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! DiskCell
 
         if viewTypeSeg.selectedSegmentIndex == 0 {
-            
-            let key = sections[indexPath.section]
-            let game = games[key]![indexPath.row]
+            let game = games[indexPath.row]
+            /*let key = sections[indexPath.section]
+            let game = games[key]![indexPath.row]*/
             cell.name.text = game.name
             cell.diskName = game.diskName
             
         } else {
-            
-            cell.name.text = disks[indexPath.row].deletingPathExtension()
-            cell.diskName = disks[indexPath.row]
+            if isFiltering() {
+                cell.name.text = filteredDisks[indexPath.row].deletingPathExtension()
+                cell.diskName = filteredDisks[indexPath.row]
+            } else {
+                cell.name.text = disks[indexPath.row].deletingPathExtension()
+                cell.diskName = disks[indexPath.row]
+            }
         }
         
         cell.startDisk = { [weak self] (diskName) in
@@ -207,26 +256,33 @@ class DiskViewController: UIViewController, UITableViewDelegate, UITableViewData
         return cell
     }
     
+    /*
     func configureCell(cell: UITableViewCell, forRowAtIndexPath: IndexPath) {
         
     }
-    
+    */
     //MARK: UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if viewTypeSeg.selectedSegmentIndex == 0 {
-            let key = sections[indexPath.section]
+            /*let key = sections[indexPath.section]
             let game = games[key]![indexPath.row]
-
+            */
+            let game = games[indexPath.row]
+            
             self.selectedDiskName = getUserGamesDirectory() + "/" + game.diskName
             self.selectedProgram = game.name
             self.performSegue(withIdentifier: "showEmulator", sender: self)
         } else {
             // Show disk contents
             print( "Showing disk contents...")
-            
-            selectedDiskName = getUserGamesDirectory().appendingPathComponent(disks[indexPath.row])
+            if (isFiltering()) {
+                selectedDiskName = getUserGamesDirectory().appendingPathComponent(filteredDisks[indexPath.row])
+            }
+            else {
+                selectedDiskName = getUserGamesDirectory().appendingPathComponent(disks[indexPath.row])
+            }
             
             self.performSegue(withIdentifier: "showDiskContents", sender: self)
         }
