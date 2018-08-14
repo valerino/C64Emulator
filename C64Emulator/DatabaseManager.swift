@@ -201,8 +201,7 @@ class DatabaseManager: NSObject {
         guard let db = openDatabase() else { return }
         
         do {
-            try db.executeUpdate("delete from userPrograms where diskName = ?", values: [diskName])
-
+            try db.executeUpdate("Delete from userPrograms", values: nil)
             let sql = "Insert into userPrograms ( diskName, programName ) VALUES ( ?, ? )"
             db.beginTransaction()
             for program in programs {

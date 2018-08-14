@@ -120,9 +120,8 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
 
     
     override var inputAccessoryView: UIView? {
-    
         accessoryView = nil
-        if ( accessoryView == nil ) {
+        if ( accessoryView != nil ) {
             accessoryView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 77))
             accessoryView!.backgroundColor = UIColor.lightGray
             
@@ -260,6 +259,7 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
         })
         
         self.startVICEThread(files:[dataFileURLString])
+       // _viceView.becomeFirstResponder()
     }
     
     
@@ -273,6 +273,19 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
         if GCController.controllers().count == 1 {
             self.toggleHardwareController(useHardware: true)
         }
+      
+       // shrinkOrGrowViceView()
+        /*
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6 ) { [weak self] in
+            self?.setLandscapeViceViewFrame( duration:0.1, animCurve:.linear, canvasSize: (self?._viceView.textureSize())! )
+        }
+ */
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        _viceView.becomeFirstResponder()
+        setLandscapeViceViewFrame( duration:0.1, animCurve:.linear, canvasSize: _viceView.textureSize() )
     }
     
     
@@ -339,6 +352,9 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) { [weak self] in
                 guard let `self` = self else { return }
                 theVICEMachine.machineController().attachDiskImage(8, path: self._dataFilePath)
+                //self.setLandscapeViceViewFrame(duration: 0, animCurve: UIViewAnimationCurve.linear, canvasSize: self._viceView.textureSize())
+           
+                
             }
         }
 
@@ -404,7 +420,7 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
     // ----------------------------------------------------------------------------
     {
         if _viceView.isFirstResponder {
-            _viceView.resignFirstResponder()
+            //_viceView.resignFirstResponder()
         } else {
             _viceView.becomeFirstResponder()
         }
@@ -633,7 +649,7 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
         UIView.commitAnimations()
         
         _controlsVisible = true
-        
+
         scheduleControlFadeOut(delay:0)
         
         self.setNeedsStatusBarAppearanceUpdate()
@@ -893,6 +909,7 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
         }
         else
         {
+            _keyboardOffset = 0.0
             if _keyboardOffset > 0.0
             {
                 frame.size.height = 768.0 - _keyboardOffset
@@ -902,6 +919,7 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
             }
             else
             {
+                _viceViewScaled = true
                 let scaleFactor : CGFloat = _viceViewScaled ? 1024.0/768.0 : 1.0
                 
                 let doubledCanvasSize = CGSize(width:canvasSize.width * 2.0, height:canvasSize.height * 2.0);
@@ -974,13 +992,14 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
             curve = UIViewAnimationCurve(rawValue: val )!
         }
         
+        /*
         if (UIInterfaceOrientationIsLandscape(UIApplication.shared.statusBarOrientation)) {
             self.setLandscapeViceViewFrame(duration: duration, animCurve: curve, canvasSize: _viceView.textureSize())
         }
         else if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
             self.setPortraitViceViewFrame(duration: duration, animCurve: curve, canvasSize: _viceView.textureSize())
         }
-        
+*/
         self.controlsFadeOut()
     }
     
@@ -989,6 +1008,7 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
     @objc func keyboardWillBeHidden( _ notification : NSNotification )
     // ----------------------------------------------------------------------------
     {
+        /*
         _keyboardVisible = false
         _keyboardOffset = 0.0
         
@@ -1012,6 +1032,7 @@ class EmulatorViewController: UIViewController, VICEApplicationProtocol, UIToolb
         else if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
             self.setPortraitViceViewFrame(duration: duration, animCurve: curve, canvasSize: _viceView.textureSize())
         }
+        */
     }
     
     
